@@ -58,10 +58,8 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDto getTransactionFromUser(String username, Long transactionId) throws UserNotFoundException, TransactionNotFoundException {
         final User user = userRepository.findById(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        if (!transactionRepository.existsByIdAndRequester(transactionId, user)) {
-            throw new TransactionNotFoundException(transactionId);
-        }
-        if (!transactionRepository.existsByIdAndProvider(transactionId, user)) {
+        if (!transactionRepository.existsByIdAndRequester(transactionId, user)
+                && !transactionRepository.existsByIdAndProvider(transactionId, user)) {
             throw new TransactionNotFoundException(transactionId);
         }
         return getTransaction(transactionId);
@@ -158,10 +156,8 @@ public class TransactionServiceImpl implements TransactionService {
     public void deleteTransactionFromUser(String username, Long transactionId) throws UserNotFoundException, TransactionNotFoundException {
         final User user = userRepository.findById(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        if (!transactionRepository.existsByIdAndRequester(transactionId, user)) {
-            throw new TransactionNotFoundException(transactionId);
-        }
-        if (!transactionRepository.existsByIdAndProvider(transactionId, user)) {
+        if (!transactionRepository.existsByIdAndRequester(transactionId, user)
+                && !transactionRepository.existsByIdAndProvider(transactionId, user)) {
             throw new TransactionNotFoundException(transactionId);
         }
         deleteTransaction(transactionId);
@@ -177,9 +173,6 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     public TransactionDto convertToTransactionDto(Transaction transaction) {
-
-
-
         TransactionDto transactionDto = new TransactionDto();
         transactionDto.setId(transaction.getId());
         Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -209,7 +202,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (!requestedBook.isAvailable()) {
             throw new InvalidRequestException("Requested book is not available.");
         }
-        if (requestedBook.getOwner().getUsername().equals(transactionInputDto.getRequesterUsername()))  {
+        if (requestedBook.getOwner().getUsername().equals(transactionInputDto.getRequesterUsername())) {
             throw new InvalidRequestException("Owners cannot request their own books.");
         }
 

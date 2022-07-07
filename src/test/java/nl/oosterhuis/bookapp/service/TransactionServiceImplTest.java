@@ -195,7 +195,6 @@ class TransactionServiceImplTest {
         // given
         given(userRepository.findById(userA.getUsername())).willReturn(Optional.ofNullable(userA));
         given(transactionRepository.existsByIdAndRequester(transactionA.getId(), userA)).willReturn(true);
-        given(transactionRepository.existsByIdAndProvider(transactionA.getId(), userA)).willReturn(true);
         given(transactionRepository.findById(transactionA.getId())).willReturn(Optional.ofNullable(transactionA));
         given(userService.convertToUserDto(userA)).willReturn(userDtoA);
         given(userService.convertToUserDto(userB)).willReturn(userDtoB);
@@ -269,7 +268,6 @@ class TransactionServiceImplTest {
         // given
         given(userRepository.findById(userA.getUsername())).willReturn(Optional.ofNullable(userA));
         given(transactionRepository.existsByIdAndRequester(transactionA.getId(), userA)).willReturn(true);
-        given(transactionRepository.existsByIdAndProvider(transactionA.getId(), userA)).willReturn(true);
         given(transactionRepository.findById(transactionA.getId())).willReturn(Optional.ofNullable(transactionA));
         willDoNothing().given(transactionRepository).delete(transactionA);
         // when
